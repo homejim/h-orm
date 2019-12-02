@@ -11,5 +11,24 @@
 
     <artifactId>h-orm-samples</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.homejim.framework</groupId>
+            <artifactId>h-orm-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>2.2.1.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>2.2.1.RELEASE</version>
+        </dependency>
+
+    </dependencies>
 </project>
