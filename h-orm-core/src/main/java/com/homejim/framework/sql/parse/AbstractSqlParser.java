@@ -6,7 +6,8 @@ package com.homejim.framework.sql.parse;
  * @author homejim
  * @since 2019-12-03 12:53
  */
-public class AbstractSqlParser implements SqlParser{
+public abstract class AbstractSqlParser implements SqlParser{
+
     public void parse() {
 
     }
