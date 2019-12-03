@@ -14,10 +14,23 @@ import java.util.List;
 @Setter
 @Getter
 public class SqlEntity {
-
     /**
      * 映射字段
      */
     private List<MappingProperty> properties;
 
+    /**
+     * 主键
+     */
+    private MappingProperty primaryKey;
+
+    /**
+     * 表名
+     */
+    private String table;
+
+    /**
+     * 类全限定名
+     */
+    private String classFullName;
 }
