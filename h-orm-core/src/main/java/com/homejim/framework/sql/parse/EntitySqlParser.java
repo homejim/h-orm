@@ -62,6 +62,8 @@ public class EntitySqlParser implements SqlParser {
             } else {
                 mappingProperty.setColumn(column.value());
             }
+
+            // Id 处理
             if (field.isAnnotationPresent(Id.class)) {
                 if (sqlEntity.getPrimaryKey() != null) {
                     throw new RuntimeException("同一个类中不能存在两个 Id");
