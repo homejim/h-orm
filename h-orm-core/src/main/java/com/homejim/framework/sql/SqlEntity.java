@@ -20,6 +20,21 @@ public class SqlEntity {
     private List<MappingProperty> properties;
 
     /**
+     * 不更新的字段
+     */
+    private List<MappingProperty> notUpdateProperties;
+
+    /**
+     * 不插入的字段
+     */
+    private List<MappingProperty> notInsertProperties;
+
+    /**
+     * 不查询的字段
+     */
+    private List<MappingProperty> notSelectProperties;
+
+    /**
      * 主键
      */
     private MappingProperty primaryKey;

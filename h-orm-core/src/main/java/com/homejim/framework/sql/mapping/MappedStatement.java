@@ -1,5 +1,7 @@
 package com.homejim.framework.sql.mapping;
 
+import com.homejim.framework.sql.SqlEntity;
+
 /**
  * 表示一个 SQL节点
  *
@@ -8,4 +10,7 @@ package com.homejim.framework.sql.mapping;
  */
 public final class MappedStatement {
 
+    private SqlEntity sqlEntity;
+
+    private Boolean cache;
 }
