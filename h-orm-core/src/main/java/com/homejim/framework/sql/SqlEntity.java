@@ -1,9 +1,11 @@
 package com.homejim.framework.sql;
 
+import com.google.common.base.Joiner;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Sql实体类
@@ -14,6 +16,9 @@ import java.util.List;
 @Setter
 @Getter
 public class SqlEntity {
+    private static Joiner sqlJoiner = Joiner.on(",");
+
+
     /**
      * 映射字段
      */
@@ -48,4 +53,10 @@ public class SqlEntity {
      * 类全限定名
      */
     private String classFullName;
+
+    public String getSelectDBColumns() {
+        List<String> selectColumns = properties.stream().filter(MappingProperty::getSelect).map(MappingProperty::getColumn).collect(Collectors.toList());
+        return sqlJoiner.join(selectColumns);
+    }
+
 }

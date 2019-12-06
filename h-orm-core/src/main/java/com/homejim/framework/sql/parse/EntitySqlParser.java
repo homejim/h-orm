@@ -32,8 +32,8 @@ public class EntitySqlParser implements SqlParser {
         }
         for (Class aClass : classes) {
             SqlEntity sqlEntity = parse(aClass);
+            
             MappedStatement mappedStatement = new MappedStatement();
-            mappedStatement.setSqlEntity(sqlEntity);
             SqlFactory.addSql(sqlEntity.getClassFullName(), mappedStatement);
         }
     }

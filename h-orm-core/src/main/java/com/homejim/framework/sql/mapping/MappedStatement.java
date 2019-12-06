@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 public final class MappedStatement {
 
-    private SqlEntity sqlEntity;
+    private String sql;
 
     private Boolean cache;
 }

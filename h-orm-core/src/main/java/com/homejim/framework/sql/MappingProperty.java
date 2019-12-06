@@ -23,8 +23,11 @@ public class MappingProperty {
      */
     private String field;
 
-    /**
-     * 对应的类型
-     */
-    private String type;
+    private Boolean insert = true;
+
+    private Boolean update = true;
+
+    private Boolean delete = true;
+
+    private Boolean select = true;
 }

@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Sql 工厂， 通过其产生对应的 Sql
  *
- * @author hejiajin hejiajin@3vjia.com
+ * @author homejim
  * @since 2019-12-04 12:49
  */
 public class SqlFactory {
@@ -18,5 +18,11 @@ public class SqlFactory {
         if (sqlPools.get(sqlKey) != null) {
             throw new RuntimeException(String.format("The sqlPools has contained key [%s], please checked", sqlKey));
         }
+        sqlPools.put(sqlKey, statement);
     }
+
+    public static String sqlKey(String className, String db, SqlTypeEnum sqlTypeEnum) {
+        return String.format("%s$%s$%s", db, className, sqlTypeEnum.getCode()).toLowerCase();
+    }
+
 }
