@@ -5,6 +5,8 @@ import com.homejim.framework.annotation.Id;
 import com.homejim.framework.annotation.Table;
 import com.homejim.framework.sql.MappingProperty;
 import com.homejim.framework.sql.SqlEntity;
+import com.homejim.framework.sql.SqlFactory;
+import com.homejim.framework.sql.mapping.MappedStatement;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -28,10 +30,11 @@ public class EntitySqlParser implements SqlParser {
         if (classes == null) {
             return;
         }
-        List<SqlEntity> sqlEntities = new ArrayList<SqlEntity>();
         for (Class aClass : classes) {
             SqlEntity sqlEntity = parse(aClass);
-            sqlEntities.add(sqlEntity);
+            MappedStatement mappedStatement = new MappedStatement();
+            mappedStatement.setSqlEntity(sqlEntity);
+            SqlFactory.addSql(sqlEntity.getClassFullName(), mappedStatement);
         }
     }
 

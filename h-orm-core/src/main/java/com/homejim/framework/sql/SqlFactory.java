@@ -14,7 +14,7 @@ import java.util.Map;
 public class SqlFactory {
     private static Map<String, MappedStatement> sqlPools = new HashMap<>();
 
-    public void addSql(String sqlKey, MappedStatement statement) {
+    public static void addSql(String sqlKey, MappedStatement statement) {
         if (sqlPools.get(sqlKey) != null) {
             throw new RuntimeException(String.format("The sqlPools has contained key [%s], please checked", sqlKey));
         }
