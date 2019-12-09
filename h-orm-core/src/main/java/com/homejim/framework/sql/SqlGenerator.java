@@ -16,7 +16,7 @@ public class SqlGenerator {
 
     private static final Joiner andJoiner = Joiner.on(" and ");
 
-    public static final String SELECT_TEMPLATE = "select %s from %s where %s";
+    public static final String SELECT_TEMPLATE = "select %s from %s where %s limit 1";
 
     public static String selectOne(SqlEntity sqlEntity) {
         String selectDBColumns = sqlEntity.getSelectDBColumns();
