@@ -1,6 +1,8 @@
 package com.homejim.framework.test;
 
 import com.homejim.framework.context.init.Initializer;
+import com.homejim.framework.sql.SqlFactory;
+import com.homejim.framework.sql.mapping.MappedStatement;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -17,6 +19,10 @@ public class WebApplication {
         SpringApplication application = new SpringApplication(WebApplication.class);
         application.addInitializers(new Initializer());
         application.run(args);
+
+        MappedStatement sql = SqlFactory.getSql("mysql$com.homejim.framework.test.entity.user$select");
+        String sql1 = sql.getSql();
+        System.out.println(sql1);
     }
 
     @GetMapping("/hello")

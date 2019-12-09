@@ -21,6 +21,10 @@ public class SqlFactory {
         sqlPools.put(sqlKey, statement);
     }
 
+    public static MappedStatement getSql(String sqlKey) {
+        return sqlPools.get(sqlKey);
+    }
+
     public static String sqlKey(String className, String db, SqlTypeEnum sqlTypeEnum) {
         return String.format("%s$%s$%s", db, className, sqlTypeEnum.getCode()).toLowerCase();
     }

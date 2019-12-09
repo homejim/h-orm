@@ -3,9 +3,7 @@ package com.homejim.framework.sql.parse;
 import com.homejim.framework.annotation.Column;
 import com.homejim.framework.annotation.Id;
 import com.homejim.framework.annotation.Table;
-import com.homejim.framework.sql.MappingProperty;
-import com.homejim.framework.sql.SqlEntity;
-import com.homejim.framework.sql.SqlFactory;
+import com.homejim.framework.sql.*;
 import com.homejim.framework.sql.mapping.MappedStatement;
 
 import java.lang.annotation.Annotation;
@@ -34,7 +32,8 @@ public class EntitySqlParser implements SqlParser {
             SqlEntity sqlEntity = parse(aClass);
             
             MappedStatement mappedStatement = new MappedStatement();
-            SqlFactory.addSql(sqlEntity.getClassFullName(), mappedStatement);
+            mappedStatement.setSql(SqlGenerator.selectOne(sqlEntity));
+            SqlFactory.addSql(SqlFactory.sqlKey(sqlEntity.getClassFullName(), "mysql", SqlTypeEnum.SELECT), mappedStatement);
         }
     }
 
@@ -72,9 +71,8 @@ public class EntitySqlParser implements SqlParser {
                     throw new RuntimeException("同一个类中不能存在两个 Id");
                 }
                 sqlEntity.setPrimaryKey(mappingProperty);
-            } else {
-                mappings.add(mappingProperty);
             }
+            mappings.add(mappingProperty);
         }
         sqlEntity.setProperties(mappings);
 
