@@ -1,13 +1,11 @@
 package com.homejim.framework.sql.mapping;
 
-import com.homejim.framework.sql.SqlEntity;
-import com.homejim.framework.sql.SqlTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * 表示一个 SQL节点
@@ -19,20 +17,16 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-public final class MappedStatement {
+public class StatementContext {
 
     /**
-     * sql 的类型
+     * 实际的参数. 使用 Map 以便进行匹配
      */
-    private SqlTypeEnum sqlTypeEnum;
+    private Map<String, Object> params;
 
     /**
-     * 是否缓存
+     * sql. 可以是 key 的形式或者真正的 sql.
      */
-    private Boolean cache;
+    private String sql;
 
-    /**
-     * sql 片段
-     */
-    List<SqlSegment> segments;
 }
