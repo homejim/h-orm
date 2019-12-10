@@ -2,7 +2,6 @@ package com.homejim.framework.test.token;
 
 import com.homejim.framework.token.GenericTokenParser;
 import com.homejim.framework.token.TokenHandler;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
