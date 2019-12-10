@@ -13,9 +13,14 @@ import lombok.Setter;
 public class SqlSegment {
 
     /**
-     * sql 片段
+     * 解析后的 sql 片段
      */
     private String segment;
+
+    /**
+     * 解析后的  SQL
+     */
+    private String parsedSql;
 
     /**
      * 是否进行非空校验
