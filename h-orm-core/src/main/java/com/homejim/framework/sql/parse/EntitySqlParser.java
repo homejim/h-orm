@@ -32,7 +32,6 @@ public class EntitySqlParser implements SqlParser {
             SqlEntity sqlEntity = parse(aClass);
             
             MappedStatement mappedStatement = new MappedStatement();
-            mappedStatement.setSql(SqlGenerator.selectOne(sqlEntity));
             SqlFactory.addSql(SqlFactory.sqlKey(sqlEntity.getClassFullName(), "mysql", SqlTypeEnum.SELECT), mappedStatement);
         }
     }
