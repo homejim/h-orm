@@ -1,4 +1,11 @@
 package com.homejim.framework.token;
+
+import com.homejim.framework.sql.mapping.SqlSegment;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author Clinton Begin
  */
@@ -14,15 +21,18 @@ public class GenericTokenParser {
         this.handler = handler;
     }
 
-    public String parse(String text) {
+    public List<SqlSegment> parse(String text) {
         if (text == null || text.isEmpty()) {
-            return "";
+            throw new RuntimeException("空字符串无法解析");
         }
         // search open token
         int start = text.indexOf(openToken, 0);
         if (start == -1) {
-            return text;
+            SqlSegment sqlSegment = newCommonSqlSegment(text);
+            return Collections.singletonList(sqlSegment);
         }
+        List<SqlSegment> sqlSegments = new ArrayList<>();
+
         char[] src = text.toCharArray();
         int offset = 0;
         final StringBuilder builder = new StringBuilder();
@@ -68,6 +78,20 @@ public class GenericTokenParser {
         if (offset < src.length) {
             builder.append(src, offset, src.length - offset);
         }
-        return builder.toString();
+        return sqlSegments;
+    }
+
+    /**
+     * 产生一般的 sql 片段（没有变量）
+     * @param text
+     * @return
+     */
+    private SqlSegment newCommonSqlSegment(String text) {
+        SqlSegment sqlSegment = new SqlSegment();
+        sqlSegment.setSegment(text);
+        sqlSegment.setParsedSql(text);
+        sqlSegment.setCheckIfExist(false);
+        sqlSegment.setParam(null);
+        return sqlSegment;
     }
 }
