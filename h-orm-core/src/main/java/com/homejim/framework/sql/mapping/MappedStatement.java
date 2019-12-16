@@ -1,6 +1,5 @@
 package com.homejim.framework.sql.mapping;
 
-import com.homejim.framework.sql.SqlEntity;
 import com.homejim.framework.sql.SqlTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

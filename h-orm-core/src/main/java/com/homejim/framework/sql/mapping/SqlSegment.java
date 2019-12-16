@@ -13,7 +13,7 @@ import lombok.Setter;
 public class SqlSegment {
 
     /**
-     * 解析后的 sql 片段
+     * sql 片段
      */
     private String segment;
 

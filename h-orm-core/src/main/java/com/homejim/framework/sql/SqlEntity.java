@@ -10,14 +10,13 @@ import java.util.stream.Collectors;
 /**
  * Sql实体类
  *
- * @author hejiajin hejiajin@3vjia.com
+ * @author homejim
  * @since 2019-12-03 19:22
  */
 @Setter
 @Getter
 public class SqlEntity {
     private static Joiner sqlJoiner = Joiner.on(",");
-
 
     /**
      * 映射字段
