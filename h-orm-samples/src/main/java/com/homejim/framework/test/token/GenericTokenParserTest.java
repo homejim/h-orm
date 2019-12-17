@@ -18,6 +18,9 @@ public class GenericTokenParserTest {
     List<SqlSegment> parses = parser.parse(sql);
     Assert.assertEquals(parses.size(), 2);
     Assert.assertEquals("? and user_id = #userId#", parses.get(1).getSegment());
+    Assert.assertEquals("and user_id = #userId#", parses.get(1).getParsedSql());
+    Assert.assertEquals("userId", parses.get(1).getParam());
+    Assert.assertTrue(parses.get(1).isCheckIfExist());
   }
 
 }

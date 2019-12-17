@@ -27,10 +27,10 @@ public class SegmentTokenHandler implements TokenHandler{
     private void segmentPattern(SqlSegment sqlSegment) {
         String segment = sqlSegment.getSegment().trim();
         if (segment.startsWith("??")) {
-            sqlSegment.setParsedSql(segment.substring(2));
+            sqlSegment.setParsedSql(segment.substring(2).trim());
             sqlSegment.setCheckIfExist(false);
         } else if (segment.startsWith("?")) {
-            sqlSegment.setParsedSql(segment.substring(1));
+            sqlSegment.setParsedSql(segment.substring(1).trim());
             sqlSegment.setCheckIfExist(true);
         }
     }
