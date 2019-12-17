@@ -5,6 +5,9 @@ import com.homejim.framework.annotation.Id;
 import com.homejim.framework.annotation.Table;
 import com.homejim.framework.sql.*;
 import com.homejim.framework.sql.mapping.MappedStatement;
+import com.homejim.framework.sql.mapping.SqlSegment;
+import com.homejim.framework.token.GenericTokenParser;
+import com.homejim.framework.token.SegmentTokenHandler;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -21,6 +24,11 @@ public class EntitySqlParser implements SqlParser {
 
     private Set<Class<?>> classes;
 
+    /**
+     * sql 符号解析器
+     */
+    private GenericTokenParser tokenParser = new GenericTokenParser("{", "}", new SegmentTokenHandler());
+
     public EntitySqlParser(Set<Class<?>> classes) {
         this.classes = classes;
     }
@@ -32,6 +40,8 @@ public class EntitySqlParser implements SqlParser {
             SqlEntity sqlEntity = parse(aClass);
             
             MappedStatement mappedStatement = new MappedStatement();
+            List<SqlSegment> sqlSegments = tokenParser.parse(SqlGenerator.selectOne(sqlEntity));
+            mappedStatement.setSegments(sqlSegments);
             SqlFactory.addSql(SqlFactory.sqlKey(sqlEntity.getClassFullName(), "mysql", SqlTypeEnum.SELECT), mappedStatement);
         }
     }

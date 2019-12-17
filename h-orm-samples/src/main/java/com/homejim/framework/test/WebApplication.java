@@ -20,9 +20,8 @@ public class WebApplication {
         application.addInitializers(new Initializer());
         application.run(args);
 
-//        MappedStatement sql = SqlFactory.getSql("mysql$com.homejim.framework.test.entity.user$select");
-//        String sql1 = sql.getSql();
-//        System.out.println(sql1);
+        MappedStatement sql = SqlFactory.getSql("mysql$com.homejim.framework.test.entity.user$select");
+        System.out.println("22");
     }
 
     @GetMapping("/hello")

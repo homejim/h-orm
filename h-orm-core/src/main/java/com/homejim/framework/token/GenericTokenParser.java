@@ -35,7 +35,6 @@ public class GenericTokenParser {
 
         char[] src = text.toCharArray();
         int offset = 0;
-        final StringBuilder builder = new StringBuilder();
         StringBuilder expression = null;
         while (start > -1) {
             if (start > 0 && src[start - 1] == '\\') {
@@ -78,20 +77,22 @@ public class GenericTokenParser {
             start = text.indexOf(openToken, offset);
         }
         if (offset < src.length) {
-            sqlSegments.add(newCommonSqlSegment(new String(src, offset, start - offset - 1)));
+            sqlSegments.add(newCommonSqlSegment(new String(src, offset, src.length - offset)));
         }
         return sqlSegments;
     }
 
     /**
      * 产生一般的 sql 片段（没有变量）
+     *
      * @param text
      * @return
      */
     private SqlSegment newCommonSqlSegment(String text) {
+        String trimText = text.trim();
         SqlSegment sqlSegment = new SqlSegment();
-        sqlSegment.setSegment(text);
-        sqlSegment.setParsedSql(text);
+        sqlSegment.setSegment(trimText);
+        sqlSegment.setParsedSql(trimText);
         sqlSegment.setCheckIfExist(false);
         sqlSegment.setParam(null);
         return sqlSegment;
