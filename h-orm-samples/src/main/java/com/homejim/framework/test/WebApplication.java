@@ -1,11 +1,10 @@
 package com.homejim.framework.test;
 
 import com.homejim.framework.context.init.Initializer;
-import com.homejim.framework.sql.SqlFactory;
+import com.homejim.framework.sql.SqlPool;
 import com.homejim.framework.sql.mapping.MappedStatement;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,7 @@ public class WebApplication {
         application.addInitializers(new Initializer());
         application.run(args);
 
-        MappedStatement sql = SqlFactory.getSql("mysql$com.homejim.framework.test.entity.user$select");
+        MappedStatement sql = SqlPool.getSql("mysql$com.homejim.framework.test.entity.user$select");
         System.out.println("22");
     }
 

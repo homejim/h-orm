@@ -9,7 +9,6 @@ import com.homejim.framework.sql.mapping.SqlSegment;
 import com.homejim.framework.token.GenericTokenParser;
 import com.homejim.framework.token.SegmentTokenHandler;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class EntitySqlParser implements SqlParser {
             MappedStatement mappedStatement = new MappedStatement();
             List<SqlSegment> sqlSegments = tokenParser.parse(SqlGenerator.selectOne(sqlEntity));
             mappedStatement.setSegments(sqlSegments);
-            SqlFactory.addSql(SqlFactory.sqlKey(sqlEntity.getClassFullName(), "mysql", SqlTypeEnum.SELECT), mappedStatement);
+            SqlPool.addSql(SqlPool.sqlKey(sqlEntity.getClassFullName(), "mysql", SqlTypeEnum.SELECT), mappedStatement);
         }
     }
 
