@@ -40,7 +40,7 @@ public class GenericTokenParser {
         while (start > -1) {
             if (start > 0 && src[start - 1] == '\\') {
                 // this open token is escaped. remove the backslash and continue.
-                builder.append(src, offset, start - offset - 1).append(openToken);
+                sqlSegments.add(newCommonSqlSegment(new String(src, offset, start - offset - 1) + openToken));
                 offset = start + openToken.length();
             } else {
                 // found open token. let's search close token.
@@ -49,7 +49,9 @@ public class GenericTokenParser {
                 } else {
                     expression.setLength(0);
                 }
-                builder.append(src, offset, start - offset);
+                // 处理 common 节点
+                String s = new String(src, offset, start - offset);
+                sqlSegments.add(newCommonSqlSegment(s));
                 offset = start + openToken.length();
                 int end = text.indexOf(closeToken, offset);
                 while (end > -1) {
@@ -66,17 +68,17 @@ public class GenericTokenParser {
                 }
                 if (end == -1) {
                     // close token was not found.
-                    builder.append(src, start, src.length - start);
+                    sqlSegments.add(newCommonSqlSegment(new String(src, start, src.length - start)));
                     offset = src.length;
                 } else {
-                    builder.append(handler.handleToken(expression.toString()));
+                    sqlSegments.add(handler.handleToken(expression.toString()));
                     offset = end + closeToken.length();
                 }
             }
             start = text.indexOf(openToken, offset);
         }
         if (offset < src.length) {
-            builder.append(src, offset, src.length - offset);
+            sqlSegments.add(newCommonSqlSegment(new String(src, offset, start - offset - 1)));
         }
         return sqlSegments;
     }
