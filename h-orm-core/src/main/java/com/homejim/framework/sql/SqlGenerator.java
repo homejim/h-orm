@@ -27,7 +27,7 @@ public class SqlGenerator {
     public static String where(List<MappingProperty> columns) {
         List<String> whereCaluses = new ArrayList<>();
         columns.forEach(item -> {
-            String whereCaluse = String.format("{?? %s = #%s# }", item.getColumn(), item.getField());
+            String whereCaluse = String.format("{? %s = #%s# }", item.getColumn(), item.getField());
             whereCaluses.add(whereCaluse);
         });
         return andJoiner.join(whereCaluses);

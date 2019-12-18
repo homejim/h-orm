@@ -41,6 +41,7 @@ public class EntitySqlParser implements SqlParser {
             MappedStatement mappedStatement = new MappedStatement();
             List<SqlSegment> sqlSegments = tokenParser.parse(SqlGenerator.selectOne(sqlEntity));
             mappedStatement.setSegments(sqlSegments);
+            mappedStatement.setSqlEntity(sqlEntity);
             SqlPool.addSql(SqlPool.sqlKey(sqlEntity.getClassFullName(), "mysql", SqlTypeEnum.SELECT), mappedStatement);
         }
     }

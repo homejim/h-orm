@@ -39,6 +39,7 @@ public class SegmentTokenHandler implements TokenHandler{
         Matcher paramMatcher = PARAM_PATTERN.matcher(sqlSegment.getParsedSql());
         if (paramMatcher.find()) {
             sqlSegment.setParam(paramMatcher.group(1));
+            sqlSegment.setParsedSql(sqlSegment.getParsedSql().replace("#" + sqlSegment.getParam() + "#", "?"));
         }
     }
 }
