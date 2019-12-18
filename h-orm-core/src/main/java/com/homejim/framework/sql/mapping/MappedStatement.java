@@ -1,5 +1,6 @@
 package com.homejim.framework.sql.mapping;
 
+import com.homejim.framework.sql.SqlEntity;
 import com.homejim.framework.sql.SqlTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,4 +35,6 @@ public final class MappedStatement {
      * sql 片段
      */
     List<SqlSegment> segments;
+
+    private SqlEntity sqlEntity;
 }

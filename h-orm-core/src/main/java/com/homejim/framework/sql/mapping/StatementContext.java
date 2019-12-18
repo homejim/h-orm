@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * 表示一个 SQL节点
@@ -20,13 +20,13 @@ import java.util.Map;
 public class StatementContext {
 
     /**
-     * 实际的参数. 使用 Map 以便进行匹配
+     * 实际的参数.
      */
-    private Map<String, Object> params;
+    private List<Object> params;
 
     /**
      * sql. 可以是 key 的形式或者真正的 sql.
      */
-    private String sql;
+    private String preparedSql;
 
 }
