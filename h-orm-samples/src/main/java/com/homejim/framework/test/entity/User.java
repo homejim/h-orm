@@ -4,7 +4,7 @@ import com.homejim.framework.annotation.Column;
 import com.homejim.framework.annotation.Id;
 import com.homejim.framework.annotation.Table;
 
-@Table("ass_user")
+@Table("user")
 public class User {
 
     @Id
