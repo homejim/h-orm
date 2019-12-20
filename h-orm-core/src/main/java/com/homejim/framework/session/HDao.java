@@ -1,5 +1,8 @@
 package com.homejim.framework.session;
 
+import com.homejim.framework.reflection.DefaultReflectorFactory;
+import com.homejim.framework.reflection.Reflector;
+import com.homejim.framework.reflection.involker.Invoker;
 import com.homejim.framework.sql.MappingProperty;
 import com.homejim.framework.sql.SqlEntity;
 import com.homejim.framework.sql.SqlPool;
@@ -9,11 +12,8 @@ import com.homejim.framework.sql.mapping.SqlSegment;
 import com.homejim.framework.sql.mapping.StatementContext;
 import org.springframework.util.StringUtils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,13 +70,33 @@ public class HDao {
                 preparedStatement.setObject(i + 1, statementContext.getParams().get(i));
             }
             resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                String username = resultSet.getString("user_name");
-                System.out.println(username);
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            Reflector reflector = DefaultReflectorFactory.INSTANCE.findForClass(tClass);
+            if (resultSet.next()) {
+                Object result = reflector.getDefaultConstructor().newInstance();
+                for (int i = 0; i < columnCount; i++) {
+                    String columnLabel = metaData.getColumnLabel(i + 1);
+                    String field = mappedStatement.getSqlEntity().getColumnFileMap().get(columnLabel);
+                    if (!StringUtils.isEmpty(field)) {
+                        Invoker setInvoker = reflector.getSetInvoker(field);
+                        Object value = resultSet.getObject(i + 1);
+                        Object[] objects = new Object[1];
+                        objects[0] = value;
+                        setInvoker.invoke(result, objects);
+                    }
+                }
+                return (T) result;
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
         } finally {
             //第六步：倒叙释放资源resultSet-》preparedStatement-》connection

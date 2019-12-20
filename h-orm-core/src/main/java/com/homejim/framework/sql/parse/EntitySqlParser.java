@@ -91,6 +91,7 @@ public class EntitySqlParser implements SqlParser {
                 sqlEntity.setPrimaryKey(mappingProperty);
             }
             mappings.add(mappingProperty);
+            sqlEntity.getColumnFileMap().put(mappingProperty.getColumn(), mappingProperty.getField());
         }
         sqlEntity.setProperties(mappings);
 

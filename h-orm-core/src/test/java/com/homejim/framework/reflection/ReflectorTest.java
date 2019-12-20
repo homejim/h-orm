@@ -1,9 +1,11 @@
 package com.homejim.framework.reflection;
 
+import com.homejim.framework.reflection.involker.Invoker;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
@@ -23,6 +25,24 @@ public class ReflectorTest {
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
     Reflector reflector = reflectorFactory.findForClass(Section.class);
     assertEquals(Long.class, reflector.getGetterType("id"));
+  }
+
+  @Test
+  public void testGetValue() {
+    Section section = new Section();
+    section.setId(98L);
+
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Section.class);
+    Invoker idGetter = reflector.getGetInvoker("id");
+    try {
+      Object value = idGetter.invoke(section, null);
+      assertEquals(98L, value);
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+    } catch (InvocationTargetException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test

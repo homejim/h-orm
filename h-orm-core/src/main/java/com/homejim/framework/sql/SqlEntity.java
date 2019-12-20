@@ -4,7 +4,9 @@ import com.google.common.base.Joiner;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -22,6 +24,8 @@ public class SqlEntity {
      * 映射字段
      */
     private List<MappingProperty> properties;
+
+    private Map<String, String> columnFileMap = new HashMap<>();
 
     /**
      * 不更新的字段
