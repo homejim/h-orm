@@ -3,7 +3,11 @@ package com.homejim.framework.sql.parse;
 import com.homejim.framework.annotation.Column;
 import com.homejim.framework.annotation.Id;
 import com.homejim.framework.annotation.Table;
-import com.homejim.framework.sql.*;
+import com.homejim.framework.sql.MappingProperty;
+import com.homejim.framework.sql.SqlEntity;
+import com.homejim.framework.sql.SqlGenerator;
+import com.homejim.framework.sql.SqlPool;
+import com.homejim.framework.sql.SqlTypeEnum;
 import com.homejim.framework.sql.mapping.MappedStatement;
 import com.homejim.framework.sql.mapping.SqlSegment;
 import com.homejim.framework.token.GenericTokenParser;
@@ -15,8 +19,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @description 实体类解析器
  * @author homejim
+ * @description 实体类解析器
  * @create: 2019-12-03 22:57
  */
 public class EntitySqlParser implements SqlParser {
@@ -31,13 +35,14 @@ public class EntitySqlParser implements SqlParser {
     public EntitySqlParser(Set<Class<?>> classes) {
         this.classes = classes;
     }
+
     public void parse() {
         if (classes == null) {
             return;
         }
         for (Class aClass : classes) {
             SqlEntity sqlEntity = parse(aClass);
-            
+
             MappedStatement mappedStatement = new MappedStatement();
             List<SqlSegment> sqlSegments = tokenParser.parse(SqlGenerator.selectOne(sqlEntity));
             mappedStatement.setSegments(sqlSegments);

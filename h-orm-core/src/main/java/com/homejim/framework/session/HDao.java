@@ -9,7 +9,11 @@ import com.homejim.framework.sql.mapping.SqlSegment;
 import com.homejim.framework.sql.mapping.StatementContext;
 import org.springframework.util.StringUtils;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +51,7 @@ public class HDao {
                     sql.append(" ").append(segment.getParsedSql());
                     finalParams.add(param);
                 }
-            }else {
+            } else {
                 sql.append(" ").append(segment.getParsedSql());
             }
         }
@@ -74,10 +78,10 @@ public class HDao {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             //第六步：倒叙释放资源resultSet-》preparedStatement-》connection
             try {
-                if (resultSet!=null && !resultSet.isClosed()){
+                if (resultSet != null && !resultSet.isClosed()) {
                     resultSet.close();
                 }
             } catch (SQLException e) {
@@ -85,8 +89,8 @@ public class HDao {
             }
 
             try {
-                if(preparedStatement!=null &&
-                        !preparedStatement.isClosed()){
+                if (preparedStatement != null &&
+                        !preparedStatement.isClosed()) {
                     preparedStatement.close();
                 }
             } catch (SQLException e) {
@@ -94,7 +98,7 @@ public class HDao {
             }
 
             try {
-                if(connection!=null && connection.isClosed()){
+                if (connection != null && connection.isClosed()) {
                     connection.close();
                 }
             } catch (SQLException e) {

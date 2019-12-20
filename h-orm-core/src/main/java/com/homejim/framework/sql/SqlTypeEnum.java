@@ -13,9 +13,9 @@ import lombok.Getter;
 @Getter
 public enum SqlTypeEnum {
 
-    SELECT("select","查询"),
-    UPDATE("select","更新"),
-    DELETE("select","删除"),
+    SELECT("select", "查询"),
+    UPDATE("select", "更新"),
+    DELETE("select", "删除"),
     INSERT("select", "插入");
 
     private String code;

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * @description SQL 片段解析器
  * @create: 2019-12-16 23:52
  */
-public class SegmentTokenHandler implements TokenHandler{
+public class SegmentTokenHandler implements TokenHandler {
 
     Pattern PARAM_PATTERN = Pattern.compile("#([a-zA-Z0-9_]+)#");
 
