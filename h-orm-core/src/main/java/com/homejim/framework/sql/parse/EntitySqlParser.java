@@ -3,6 +3,8 @@ package com.homejim.framework.sql.parse;
 import com.homejim.framework.annotation.Column;
 import com.homejim.framework.annotation.Id;
 import com.homejim.framework.annotation.Table;
+import com.homejim.framework.reflection.DefaultReflectorFactory;
+import com.homejim.framework.reflection.Reflector;
 import com.homejim.framework.sql.MappingProperty;
 import com.homejim.framework.sql.SqlEntity;
 import com.homejim.framework.sql.SqlGenerator;
@@ -41,12 +43,14 @@ public class EntitySqlParser implements SqlParser {
             return;
         }
         for (Class aClass : classes) {
+            Reflector reflector = DefaultReflectorFactory.INSTANCE.findForClass(aClass);
             SqlEntity sqlEntity = parse(aClass);
 
             MappedStatement mappedStatement = new MappedStatement();
             List<SqlSegment> sqlSegments = tokenParser.parse(SqlGenerator.selectOne(sqlEntity));
             mappedStatement.setSegments(sqlSegments);
             mappedStatement.setSqlEntity(sqlEntity);
+            mappedStatement.setReflector(reflector);
             SqlPool.addSql(SqlPool.sqlKey(sqlEntity.getClassFullName(), "mysql", SqlTypeEnum.SELECT), mappedStatement);
         }
     }

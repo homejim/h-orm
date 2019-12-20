@@ -1,5 +1,6 @@
 package com.homejim.framework.sql.mapping;
 
+import com.homejim.framework.reflection.Reflector;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,5 @@ public class StatementContext {
      */
     private String preparedSql;
 
+    private Reflector reflector;
 }

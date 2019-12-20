@@ -7,6 +7,9 @@ import java.util.concurrent.ConcurrentMap;
  * mybatis 提供的默认 ReflectorFactory 实现类
  */
 public class DefaultReflectorFactory implements ReflectorFactory {
+
+    public final static ReflectorFactory INSTANCE = new DefaultReflectorFactory();
+
     // 是否缓存
     private boolean classCacheEnabled = true;
     // 使用 ConcurrentMap 缓存 Reflector 对象

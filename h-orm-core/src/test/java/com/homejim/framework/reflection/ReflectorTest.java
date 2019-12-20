@@ -172,8 +172,8 @@ public class ReflectorTest {
       public void setTheProp(Integer arg) {}
     }
 
-    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
-    when(reflectorFactory).findForClass(BeanClass.class);
+    ReflectorFactory INSTANCE = new DefaultReflectorFactory();
+    when(INSTANCE).findForClass(BeanClass.class);
     then(caughtException()).isInstanceOf(ReflectionException.class)
       .hasMessageContaining("theProp")
       .hasMessageContaining("BeanClass")
