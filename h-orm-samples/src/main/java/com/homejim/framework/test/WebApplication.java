@@ -21,12 +21,6 @@ public class WebApplication {
         SpringApplication application = new SpringApplication(WebApplication.class);
         application.addInitializers(new Initializer());
         application.run(args);
-
-        MappedStatement sql = SqlPool.getSql("mysql$com.homejim.framework.test.entity.user$select");
-        HDao hDao = new HDao();
-        User user = hDao.selectById(User.class, "123");
-        String s = JSON.toJSONString(user);
-        System.out.println(s);
     }
 
     @GetMapping("/hello")
