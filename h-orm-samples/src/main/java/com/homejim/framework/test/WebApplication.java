@@ -1,6 +1,6 @@
 package com.homejim.framework.test;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.homejim.framework.context.init.Initializer;
 import com.homejim.framework.session.HDao;
 import com.homejim.framework.sql.SqlPool;
@@ -25,7 +25,8 @@ public class WebApplication {
         MappedStatement sql = SqlPool.getSql("mysql$com.homejim.framework.test.entity.user$select");
         HDao hDao = new HDao();
         User user = hDao.selectById(User.class, "123");
-        System.out.println(JSONUtil.toJsonStr(user));
+        String s = JSON.toJSONString(user);
+        System.out.println(s);
     }
 
     @GetMapping("/hello")

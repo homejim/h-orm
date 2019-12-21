@@ -3,7 +3,9 @@ package com.homejim.framework.test.entity;
 import com.homejim.framework.annotation.Column;
 import com.homejim.framework.annotation.Id;
 import com.homejim.framework.annotation.Table;
+import lombok.Data;
 
+@Data
 @Table("user")
 public class User {
 
