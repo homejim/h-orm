@@ -1,8 +1,6 @@
-package com.homejim.framework.test.token;
+package com.homejim.framework.token;
 
 import com.homejim.framework.sql.mapping.SqlSegment;
-import com.homejim.framework.token.GenericTokenParser;
-import com.homejim.framework.token.SegmentTokenHandler;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,7 +15,7 @@ public class GenericTokenParserTest {
         List<SqlSegment> parses = parser.parse(sql);
         Assert.assertEquals(parses.size(), 3);
         Assert.assertEquals("? and user_id = #userId#", parses.get(1).getSegment());
-        Assert.assertEquals("and user_id = #userId#", parses.get(1).getParsedSql());
+        Assert.assertEquals("and user_id = ?", parses.get(1).getParsedSql());
         Assert.assertEquals("limit 1", parses.get(2).getSegment());
         Assert.assertEquals("limit 1", parses.get(2).getParsedSql());
         Assert.assertEquals("userId", parses.get(1).getParam());
@@ -31,7 +29,7 @@ public class GenericTokenParserTest {
         List<SqlSegment> parses = parser.parse(sql);
         Assert.assertEquals(parses.size(), 2);
         Assert.assertEquals(" ? and username = #username# ", parses.get(1).getSegment());
-        Assert.assertEquals("and username = #username#", parses.get(1).getParsedSql());
+        Assert.assertEquals("and username = ?", parses.get(1).getParsedSql());
         Assert.assertEquals("username", parses.get(1).getParam());
         Assert.assertTrue(parses.get(1).isCheckIfExist());
     }
@@ -43,7 +41,7 @@ public class GenericTokenParserTest {
         List<SqlSegment> parses = parser.parse(sql);
         Assert.assertEquals(parses.size(), 2);
         Assert.assertEquals(" ?? and user_id = #userId# ", parses.get(1).getSegment());
-        Assert.assertEquals("and user_id = #userId#", parses.get(1).getParsedSql());
+        Assert.assertEquals("and user_id = ?", parses.get(1).getParsedSql());
         Assert.assertEquals("userId", parses.get(1).getParam());
         Assert.assertFalse(parses.get(1).isCheckIfExist());
     }
