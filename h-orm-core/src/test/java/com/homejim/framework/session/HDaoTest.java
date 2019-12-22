@@ -36,7 +36,7 @@ public class HDaoTest {
     @Test
     public void test() {
         HDao hDao = new HDao();
-        User user = hDao.selectById(User.class, "123");
+        User user = hDao.selectById(User.class, "1231");
         String s = JSON.toJSONString(user);
         System.out.println(s);
     }
