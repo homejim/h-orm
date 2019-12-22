@@ -1,5 +1,6 @@
 package com.homejim.framework.session;
 
+import com.homejim.framework.datasource.DataSourceFactory;
 import com.homejim.framework.reflection.DefaultReflectorFactory;
 import com.homejim.framework.reflection.Reflector;
 import com.homejim.framework.reflection.involker.Invoker;
@@ -25,6 +26,8 @@ import java.util.Map;
  * @create: 2019-12-19 00:07
  */
 public class HDao {
+
+    private DataSourceFactory dataSourceFactory;
 
     public <T> T selectById(Class<T> tClass, Object id) {
         if (StringUtils.isEmpty(id)) {
