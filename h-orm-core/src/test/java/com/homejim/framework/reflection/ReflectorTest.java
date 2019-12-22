@@ -194,7 +194,7 @@ public class ReflectorTest {
 
     ReflectorFactory INSTANCE = new DefaultReflectorFactory();
     when(INSTANCE).findForClass(BeanClass.class);
-    then(caughtException()).isInstanceOf(ReflectionException.class)
+    then(caughtException()).isInstanceOf(HormReflectionException.class)
       .hasMessageContaining("theProp")
       .hasMessageContaining("BeanClass")
       .hasMessageContaining("java.lang.String")
