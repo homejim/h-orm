@@ -50,6 +50,9 @@ public class HDaoTest {
         User user = hDao.selectById(User.class, "123");
         String s = JSON.toJSONString(user);
         System.out.println(s);
+        User user2 = hDao.selectById(User.class, "123");
+        String s2 = JSON.toJSONString(user2);
+        System.out.println(s2);
     }
 
 }
