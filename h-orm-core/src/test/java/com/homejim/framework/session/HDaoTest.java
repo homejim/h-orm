@@ -2,6 +2,7 @@ package com.homejim.framework.session;
 
 import com.alibaba.fastjson.JSON;
 import com.homejim.framework.context.init.Initializer;
+import com.homejim.framework.datasource.pooled.PooledDataSourceFactory;
 import com.homejim.framework.datasource.unpooled.UnpooledDataSourceFactory;
 import com.homejim.framework.entity.User;
 import org.junit.Before;
@@ -53,6 +54,27 @@ public class HDaoTest {
         User user2 = hDao.selectById(User.class, "123");
         String s2 = JSON.toJSONString(user2);
         System.out.println(s2);
+    }
+
+    @Test
+    public void testPooledDatasource() {
+        HDao hDao = new HDao();
+        PooledDataSourceFactory pooledDataSourceFactory = new PooledDataSourceFactory();
+        Properties properties = new Properties();
+        properties.put("driver", "com.mysql.jdbc.Driver");
+        properties.put("url", "jdbc:mysql://localhost:3306/horm_sample");
+        properties.put("username", "root");
+        properties.put("password", "123456");
+        pooledDataSourceFactory.setProperties(properties);
+
+        hDao.setDataSourceFactory(pooledDataSourceFactory);
+        User user = hDao.selectById(User.class, "123");
+        String s = JSON.toJSONString(user);
+        System.out.println(s);
+        User user2 = hDao.selectById(User.class, "123");
+        String s2 = JSON.toJSONString(user2);
+        System.out.println(s2);
+
     }
 
 }
