@@ -5,6 +5,8 @@ import com.homejim.framework.annotation.Id;
 import com.homejim.framework.annotation.Table;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @Table("user")
 public class User {
@@ -15,4 +17,7 @@ public class User {
 
     @Column("user_name")
     private String name;
+
+    @Column("create_date")
+    private Date createDate;
 }
