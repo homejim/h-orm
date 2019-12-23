@@ -78,24 +78,8 @@ public class HDao {
                 preparedStatement.setObject(i + 1, statementContext.getParams().get(i));
             }
             resultSet = preparedStatement.executeQuery();
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            Reflector reflector = DefaultReflectorFactory.INSTANCE.findForClass(tClass);
-            if (resultSet.next()) {
-                Object result = reflector.getDefaultConstructor().newInstance();
-                for (int i = 0; i < columnCount; i++) {
-                    String columnLabel = metaData.getColumnLabel(i + 1);
-                    String field = mappedStatement.getSqlEntity().getColumnFileMap().get(columnLabel);
-                    if (!StringUtils.isEmpty(field)) {
-                        Invoker setInvoker = reflector.getSetInvoker(field);
-                        Object value = resultSet.getObject(i + 1);
-                        Object[] objects = new Object[1];
-                        objects[0] = value;
-                        setInvoker.invoke(result, objects);
-                    }
-                }
-                return (T) result;
-            }
+            T result = handleQueryResult(tClass, mappedStatement, resultSet);
+            if (result != null) return result;
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -105,34 +89,80 @@ public class HDao {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } finally {
-            //第六步：倒叙释放资源resultSet-》preparedStatement-》connection
-            try {
-                if (resultSet != null && !resultSet.isClosed()) {
-                    resultSet.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                if (preparedStatement != null &&
-                        !preparedStatement.isClosed()) {
-                    preparedStatement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                if (connection != null && connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            close(connection, preparedStatement, resultSet);
         }
 
         return null;
 
+    }
+
+    /**
+     * 关闭连接
+     *
+     * @param connection
+     * @param preparedStatement
+     * @param resultSet
+     */
+    private void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) {
+        //第六步：倒叙释放资源resultSet-》preparedStatement-》connection
+        try {
+            if (resultSet != null && !resultSet.isClosed()) {
+                resultSet.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (preparedStatement != null &&
+                    !preparedStatement.isClosed()) {
+                preparedStatement.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (connection != null && connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 处理结果
+     *
+     * @param tClass
+     * @param mappedStatement
+     * @param resultSet
+     * @param <T>
+     * @return
+     * @throws SQLException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    private <T> T handleQueryResult(Class<T> tClass, MappedStatement mappedStatement, ResultSet resultSet) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        Reflector reflector = DefaultReflectorFactory.INSTANCE.findForClass(tClass);
+        if (resultSet.next()) {
+            Object result = reflector.getDefaultConstructor().newInstance();
+            for (int i = 0; i < columnCount; i++) {
+                String columnLabel = metaData.getColumnLabel(i + 1);
+                String field = mappedStatement.getSqlEntity().getColumnFileMap().get(columnLabel);
+                if (!StringUtils.isEmpty(field)) {
+                    Invoker setInvoker = reflector.getSetInvoker(field);
+                    Object value = resultSet.getObject(i + 1);
+                    Object[] objects = new Object[1];
+                    objects[0] = value;
+                    setInvoker.invoke(result, objects);
+                }
+            }
+            return (T) result;
+        }
+        return null;
     }
 }
