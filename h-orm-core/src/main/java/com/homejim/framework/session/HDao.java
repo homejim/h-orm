@@ -11,10 +11,15 @@ import com.homejim.framework.sql.SqlTypeEnum;
 import com.homejim.framework.sql.mapping.MappedStatement;
 import com.homejim.framework.sql.mapping.SqlSegment;
 import com.homejim.framework.sql.mapping.StatementContext;
+import lombok.Setter;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +32,7 @@ import java.util.Map;
  */
 public class HDao {
 
+    @Setter
     private DataSourceFactory dataSourceFactory;
 
     public <T> T selectById(Class<T> tClass, Object id) {
@@ -65,8 +71,7 @@ public class HDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/horm_sample", "root", "123456");
+            connection = dataSourceFactory.getDataSource().getConnection();
             preparedStatement = connection.prepareStatement(statementContext.getPreparedSql());
 
             for (int i = 0; i < statementContext.getParams().size(); i++) {
@@ -91,8 +96,6 @@ public class HDao {
                 }
                 return (T) result;
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

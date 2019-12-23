@@ -4,9 +4,10 @@ import org.junit.Test;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Enumeration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class UnpooledDataSourceFactoryTest {
 
@@ -21,6 +22,14 @@ public class UnpooledDataSourceFactoryTest {
         dataSource = new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:multipledrivers", "sa", "");
         dataSource.getConnection().close();
         assertEquals(before, countRegisteredDrivers());
+    }
+
+    @Test
+    public void testRegistMysql() throws SQLException {
+
+        UnpooledDataSource dataSource = null;
+        dataSource = new UnpooledDataSource("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/horm_sample", "root", "");
+        dataSource.getConnection().close();
     }
 
     protected int countRegisteredDrivers() {

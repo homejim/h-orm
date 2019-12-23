@@ -2,8 +2,8 @@ package com.homejim.framework.session;
 
 import com.alibaba.fastjson.JSON;
 import com.homejim.framework.context.init.Initializer;
+import com.homejim.framework.datasource.unpooled.UnpooledDataSourceFactory;
 import com.homejim.framework.entity.User;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Properties;
 
 /**
  * @author homejim
@@ -36,7 +38,16 @@ public class HDaoTest {
     @Test
     public void test() {
         HDao hDao = new HDao();
-        User user = hDao.selectById(User.class, "1231");
+        UnpooledDataSourceFactory unpooledDataSourceFactory = new UnpooledDataSourceFactory();
+        Properties properties = new Properties();
+        properties.put("driver", "com.mysql.jdbc.Driver");
+        properties.put("url", "jdbc:mysql://localhost:3306/horm_sample");
+        properties.put("username", "root");
+        properties.put("password", "");
+        unpooledDataSourceFactory.setProperties(properties);
+
+        hDao.setDataSourceFactory(unpooledDataSourceFactory);
+        User user = hDao.selectById(User.class, "123");
         String s = JSON.toJSONString(user);
         System.out.println(s);
     }
