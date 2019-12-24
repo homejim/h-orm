@@ -1,6 +1,7 @@
 package com.homejim.framework.session;
 
 import com.homejim.framework.datasource.DataSourceFactory;
+import com.homejim.framework.exception.HormException;
 import com.homejim.framework.reflection.DefaultReflectorFactory;
 import com.homejim.framework.reflection.Reflector;
 import com.homejim.framework.reflection.involker.Invoker;
@@ -12,6 +13,7 @@ import com.homejim.framework.sql.mapping.MappedStatement;
 import com.homejim.framework.sql.mapping.SqlSegment;
 import com.homejim.framework.sql.mapping.StatementContext;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,6 +32,7 @@ import java.util.Map;
  * @description 全局访问层
  * @create: 2019-12-19 00:07
  */
+@Slf4j
 public class HDao {
 
     @Setter
@@ -82,12 +85,6 @@ public class HDao {
             if (result != null) return result;
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
         } finally {
             close(connection, preparedStatement, resultSet);
         }
@@ -139,30 +136,42 @@ public class HDao {
      * @param resultSet
      * @param <T>
      * @return
-     * @throws SQLException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
      */
-    private <T> T handleQueryResult(Class<T> tClass, MappedStatement mappedStatement, ResultSet resultSet) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        ResultSetMetaData metaData = resultSet.getMetaData();
-        int columnCount = metaData.getColumnCount();
-        Reflector reflector = DefaultReflectorFactory.INSTANCE.findForClass(tClass);
-        if (resultSet.next()) {
-            Object result = reflector.getDefaultConstructor().newInstance();
-            for (int i = 0; i < columnCount; i++) {
-                String columnLabel = metaData.getColumnLabel(i + 1);
-                String field = mappedStatement.getSqlEntity().getColumnFileMap().get(columnLabel);
-                if (!StringUtils.isEmpty(field)) {
-                    Invoker setInvoker = reflector.getSetInvoker(field);
-                    Object value = resultSet.getObject(i + 1);
-                    Object[] objects = new Object[1];
-                    objects[0] = value;
-                    setInvoker.invoke(result, objects);
+    private <T> T handleQueryResult(Class<T> tClass, MappedStatement mappedStatement, ResultSet resultSet) {
+        ResultSetMetaData metaData = null;
+        try {
+            metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            Reflector reflector = DefaultReflectorFactory.INSTANCE.findForClass(tClass);
+            if (resultSet.next()) {
+                Object result = reflector.getDefaultConstructor().newInstance();
+                for (int i = 0; i < columnCount; i++) {
+                    String columnLabel = metaData.getColumnLabel(i + 1);
+                    String field = mappedStatement.getSqlEntity().getColumnFileMap().get(columnLabel);
+                    if (!StringUtils.isEmpty(field)) {
+                        Invoker setInvoker = reflector.getSetInvoker(field);
+                        Object value = resultSet.getObject(i + 1);
+                        Object[] objects = new Object[1];
+                        objects[0] = value;
+                        setInvoker.invoke(result, objects);
+                    }
                 }
+                return (T) result;
             }
-            return (T) result;
+        } catch (SQLException e) {
+            log.error("resultSet sql error:", e);
+            throw new HormException(e);
+        } catch (IllegalAccessException e) {
+            log.error("parse result error:", e);
+            throw new HormException(e);
+        } catch (InstantiationException e) {
+            log.error("result instance error:", e);
+            throw new HormException(e);
+        } catch (InvocationTargetException e) {
+            log.error("result can't invocation error:", e);
+            throw new HormException(e);
         }
+
         return null;
     }
 }
