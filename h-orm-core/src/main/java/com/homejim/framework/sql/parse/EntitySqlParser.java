@@ -7,9 +7,9 @@ import com.homejim.framework.reflection.DefaultReflectorFactory;
 import com.homejim.framework.reflection.Reflector;
 import com.homejim.framework.sql.MappingProperty;
 import com.homejim.framework.sql.SqlEntity;
-import com.homejim.framework.sql.SqlGenerator;
 import com.homejim.framework.sql.SqlPool;
 import com.homejim.framework.sql.SqlTypeEnum;
+import com.homejim.framework.sql.generator.SelectSqlGenerator;
 import com.homejim.framework.sql.mapping.MappedStatement;
 import com.homejim.framework.sql.mapping.SqlSegment;
 import com.homejim.framework.token.GenericTokenParser;
@@ -47,7 +47,7 @@ public class EntitySqlParser implements SqlParser {
             SqlEntity sqlEntity = parse(aClass);
 
             MappedStatement mappedStatement = new MappedStatement();
-            List<SqlSegment> sqlSegments = tokenParser.parse(SqlGenerator.selectOne(sqlEntity));
+            List<SqlSegment> sqlSegments = tokenParser.parse(SelectSqlGenerator.INSTANCE.generate(sqlEntity));
             mappedStatement.setSegments(sqlSegments);
             mappedStatement.setSqlEntity(sqlEntity);
             mappedStatement.setReflector(reflector);
