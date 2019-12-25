@@ -3,6 +3,7 @@ package com.homejim.framework.sql.generator;
 import com.google.common.base.Joiner;
 import com.homejim.framework.sql.MappingProperty;
 import com.homejim.framework.sql.SqlEntity;
+import com.homejim.framework.sql.SqlTypeEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * @since 2019-12-25
  */
 public interface SqlGenerator {
+
     Joiner andJoiner = Joiner.on(" and ");
 
     /**
@@ -32,4 +34,6 @@ public interface SqlGenerator {
         });
         return andJoiner.join(whereCaluses);
     }
+
+    SqlTypeEnum getSqlType();
 }

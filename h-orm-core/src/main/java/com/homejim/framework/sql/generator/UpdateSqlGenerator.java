@@ -3,6 +3,7 @@ package com.homejim.framework.sql.generator;
 import com.google.common.base.Joiner;
 import com.homejim.framework.sql.MappingProperty;
 import com.homejim.framework.sql.SqlEntity;
+import com.homejim.framework.sql.SqlTypeEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +16,10 @@ import java.util.stream.Collectors;
  * @since 2019-12-25
  */
 public class UpdateSqlGenerator implements SqlGenerator {
+
     private static Joiner sqlJoiner = Joiner.on(",");
+
+    public final static UpdateSqlGenerator INSTANCE = new UpdateSqlGenerator();
     /**
      * update
      */
@@ -25,7 +29,12 @@ public class UpdateSqlGenerator implements SqlGenerator {
     public String generate(SqlEntity sqlEntity) {
         String updateCaules = getUpdateCaules(sqlEntity);
         String where = where(Collections.singletonList(sqlEntity.getPrimaryKey()));
-        return String.format(UPDATE_TEMPLATE, updateCaules, sqlEntity.getTable(), where);
+        return String.format(UPDATE_TEMPLATE, sqlEntity.getTable(), updateCaules, where);
+    }
+
+    @Override
+    public SqlTypeEnum getSqlType() {
+        return SqlTypeEnum.UPDATE;
     }
 
     public String getUpdateCaules(SqlEntity sqlEntity) {

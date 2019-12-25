@@ -8,8 +8,9 @@ import com.homejim.framework.reflection.Reflector;
 import com.homejim.framework.sql.MappingProperty;
 import com.homejim.framework.sql.SqlEntity;
 import com.homejim.framework.sql.SqlPool;
-import com.homejim.framework.sql.SqlTypeEnum;
 import com.homejim.framework.sql.generator.SelectSqlGenerator;
+import com.homejim.framework.sql.generator.SqlGenerator;
+import com.homejim.framework.sql.generator.UpdateSqlGenerator;
 import com.homejim.framework.sql.mapping.MappedStatement;
 import com.homejim.framework.sql.mapping.SqlSegment;
 import com.homejim.framework.token.GenericTokenParser;
@@ -17,6 +18,7 @@ import com.homejim.framework.token.SegmentTokenHandler;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +31,9 @@ public class EntitySqlParser implements SqlParser {
 
     private Set<Class<?>> classes;
 
+    private List<SqlGenerator> generators = Arrays.asList(
+            SelectSqlGenerator.INSTANCE,
+            UpdateSqlGenerator.INSTANCE);
     /**
      * sql 符号解析器
      */
@@ -46,12 +51,14 @@ public class EntitySqlParser implements SqlParser {
             Reflector reflector = DefaultReflectorFactory.INSTANCE.findForClass(aClass);
             SqlEntity sqlEntity = parse(aClass);
 
-            MappedStatement mappedStatement = new MappedStatement();
-            List<SqlSegment> sqlSegments = tokenParser.parse(SelectSqlGenerator.INSTANCE.generate(sqlEntity));
-            mappedStatement.setSegments(sqlSegments);
-            mappedStatement.setSqlEntity(sqlEntity);
-            mappedStatement.setReflector(reflector);
-            SqlPool.addSql(SqlPool.sqlKey(sqlEntity.getClassFullName(), "mysql", SqlTypeEnum.SELECT), mappedStatement);
+            for (SqlGenerator generator : generators) {
+                MappedStatement mappedStatement = new MappedStatement();
+                List<SqlSegment> sqlSegments = tokenParser.parse(generator.generate(sqlEntity));
+                mappedStatement.setSegments(sqlSegments);
+                mappedStatement.setSqlEntity(sqlEntity);
+                mappedStatement.setReflector(reflector);
+                SqlPool.addSql(SqlPool.sqlKey(sqlEntity.getClassFullName(), "mysql", generator.getSqlType()), mappedStatement);
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package com.homejim.framework.sql.generator;
 import com.google.common.base.Joiner;
 import com.homejim.framework.sql.MappingProperty;
 import com.homejim.framework.sql.SqlEntity;
+import com.homejim.framework.sql.SqlTypeEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,11 @@ public class SelectSqlGenerator implements SqlGenerator {
         String selectCaules = getSelectCaules(sqlEntity);
         String where = where(Collections.singletonList(sqlEntity.getPrimaryKey()));
         return String.format(SELECT_TEMPLATE, selectCaules, sqlEntity.getTable(), where);
+    }
+
+    @Override
+    public SqlTypeEnum getSqlType() {
+        return SqlTypeEnum.SELECT;
     }
 
     public String getSelectCaules(SqlEntity sqlEntity) {
