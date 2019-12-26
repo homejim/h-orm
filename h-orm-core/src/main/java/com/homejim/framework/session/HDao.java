@@ -51,6 +51,19 @@ public class HDao {
         return queryEntity(tClass, mappedStatement, params);
     }
 
+    public <T> T updateById(T entity, Object id) {
+        if (StringUtils.isEmpty(id)) {
+            throw new IllegalArgumentException("Id is required!");
+        }
+        String updateSqlKey = SqlPool.sqlKey(entity.getClass().getName(), "mysql", SqlTypeEnum.UPDATE);
+        MappedStatement mappedStatement = SqlPool.getSql(updateSqlKey);
+        Map<String, Object> params = new HashMap<>();
+        SqlEntity sqlEntity = mappedStatement.getSqlEntity();
+        MappingProperty primaryKey = sqlEntity.getPrimaryKey();
+        params.put(primaryKey.getField(), id);
+        return null;
+    }
+
     public <T> T queryEntity(Class<T> tClass, MappedStatement mappedStatement, Map<String, Object> params) {
         StatementContext statementContext = new StatementContext();
         List<SqlSegment> segments = mappedStatement.getSegments();
