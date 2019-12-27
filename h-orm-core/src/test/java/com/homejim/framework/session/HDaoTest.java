@@ -44,7 +44,7 @@ public class HDaoTest {
         properties.put("driver", "com.mysql.jdbc.Driver");
         properties.put("url", "jdbc:mysql://localhost:3306/horm_sample");
         properties.put("username", "root");
-        properties.put("password", "");
+        properties.put("password", "123456");
         unpooledDataSourceFactory.setProperties(properties);
 
         hDao.setDataSourceFactory(unpooledDataSourceFactory);
@@ -54,6 +54,8 @@ public class HDaoTest {
         User user2 = hDao.selectById(User.class, "123");
         String s2 = JSON.toJSONString(user2);
         System.out.println(s2);
+        user.setName("lalala");
+        hDao.updateById(user, "123");
     }
 
     @Test

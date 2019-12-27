@@ -51,7 +51,7 @@ public class HDao {
         return queryEntity(tClass, mappedStatement, params);
     }
 
-    public <T> T updateById(T entity, Object id) {
+    public <T> Boolean updateById(T entity, Object id) {
         if (StringUtils.isEmpty(id)) {
             throw new IllegalArgumentException("Id is required!");
         }
@@ -59,11 +59,62 @@ public class HDao {
         MappedStatement mappedStatement = SqlPool.getSql(updateSqlKey);
         Map<String, Object> params = new HashMap<>();
         SqlEntity sqlEntity = mappedStatement.getSqlEntity();
-        MappingProperty primaryKey = sqlEntity.getPrimaryKey();
-        params.put(primaryKey.getField(), id);
-        return null;
+        List<MappingProperty> mappingProperties = sqlEntity.getProperties();
+        Reflector reflector = DefaultReflectorFactory.INSTANCE.findForClass(entity.getClass());
+        for (MappingProperty mappingProperty : mappingProperties) {
+            Invoker getInvoker = reflector.getGetInvoker(mappingProperty.getField());
+            Object[] objects = new Object[0];
+            try {
+                params.put(mappingProperty.getField(), getInvoker.invoke(entity, objects));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        return execute(entity.getClass(), mappedStatement,params);
     }
 
+    public <T> Boolean execute(Class<T> tClass, MappedStatement mappedStatement, Map<String, Object> params) {
+        StatementContext statementContext = new StatementContext();
+        List<SqlSegment> segments = mappedStatement.getSegments();
+        List<Object> finalParams = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        for (SqlSegment segment : segments) {
+            if (segment.isCheckIfExist()) {
+                Object param = params.get(segment.getParam());
+                if (param != null) {
+                    sql.append(" ").append(segment.getParsedSql());
+                    finalParams.add(param);
+                }
+            } else {
+                sql.append(" ").append(segment.getParsedSql());
+            }
+        }
+        statementContext.setParams(finalParams);
+        statementContext.setPreparedSql(sql.toString());
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSourceFactory.getDataSource().getConnection();
+            preparedStatement = connection.prepareStatement(statementContext.getPreparedSql());
+
+            for (int i = 0; i < statementContext.getParams().size(); i++) {
+                preparedStatement.setObject(i + 1, statementContext.getParams().get(i));
+            }
+            boolean execute = preparedStatement.execute();
+            return execute;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement, resultSet);
+        }
+
+        return false;
+
+    }
     public <T> T queryEntity(Class<T> tClass, MappedStatement mappedStatement, Map<String, Object> params) {
         StatementContext statementContext = new StatementContext();
         List<SqlSegment> segments = mappedStatement.getSegments();

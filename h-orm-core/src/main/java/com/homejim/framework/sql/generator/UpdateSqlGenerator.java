@@ -38,7 +38,7 @@ public class UpdateSqlGenerator implements SqlGenerator {
     }
 
     public String getUpdateCaules(SqlEntity sqlEntity) {
-        List<String> selectColumns = sqlEntity.getProperties().stream().filter(MappingProperty::getSelect).map(item -> "set " + item.getColumn() + "=?").collect(Collectors.toList());
+        List<String> selectColumns = sqlEntity.getProperties().stream().filter(MappingProperty::getSelect).map(item -> "{? " + item.getColumn() + "=#" + item.getField() + "#}").collect(Collectors.toList());
         return sqlJoiner.join(selectColumns);
     }
 }
