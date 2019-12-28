@@ -89,6 +89,9 @@ public class HDao {
                 }
             } else {
                 sql.append(" ").append(segment.getParsedSql());
+                if (segment.getParam() != null) {
+                    finalParams.add(params.get(segment.getParam()));
+                }
             }
         }
         statementContext.setParams(finalParams);

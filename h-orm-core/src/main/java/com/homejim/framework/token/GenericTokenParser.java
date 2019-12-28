@@ -1,6 +1,7 @@
 package com.homejim.framework.token;
 
 import com.homejim.framework.sql.mapping.SqlSegment;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +40,10 @@ public class GenericTokenParser {
         while (start > -1) {
             if (start > 0 && src[start - 1] == '\\') {
                 // this open token is escaped. remove the backslash and continue.
-                sqlSegments.add(newCommonSqlSegment(new String(src, offset, start - offset - 1) + openToken));
+                SqlSegment sqlSegment = newCommonSqlSegment(new String(src, offset, start - offset - 1) + openToken);
+                if (sqlSegment != null) {
+                    sqlSegments.add(sqlSegment);
+                }
                 offset = start + openToken.length();
             } else {
                 // found open token. let's search close token.
@@ -50,7 +54,10 @@ public class GenericTokenParser {
                 }
                 // 处理 common 节点
                 String s = new String(src, offset, start - offset);
-                sqlSegments.add(newCommonSqlSegment(s));
+                SqlSegment sqlSegment = newCommonSqlSegment(s);
+                if (sqlSegment != null) {
+                    sqlSegments.add(sqlSegment);
+                }
                 offset = start + openToken.length();
                 int end = text.indexOf(closeToken, offset);
                 while (end > -1) {
@@ -90,6 +97,9 @@ public class GenericTokenParser {
      */
     private SqlSegment newCommonSqlSegment(String text) {
         String trimText = text.trim();
+        if (StringUtils.isEmpty(trimText)) {
+            return null;
+        }
         SqlSegment sqlSegment = new SqlSegment();
         sqlSegment.setSegment(trimText);
         sqlSegment.setParsedSql(trimText);

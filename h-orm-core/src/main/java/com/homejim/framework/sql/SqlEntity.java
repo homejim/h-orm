@@ -3,6 +3,7 @@ package com.homejim.framework.sql;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,17 +27,17 @@ public class SqlEntity {
     /**
      * 不更新的字段
      */
-    private List<MappingProperty> notUpdateProperties;
+    private List<MappingProperty> notUpdateProperties = new ArrayList<>();
 
     /**
      * 不插入的字段
      */
-    private List<MappingProperty> notInsertProperties;
+    private List<MappingProperty> notInsertProperties = new ArrayList<>();
 
     /**
      * 不查询的字段
      */
-    private List<MappingProperty> notSelectProperties;
+    private List<MappingProperty> notSelectProperties = new ArrayList<>();
 
     /**
      * 主键

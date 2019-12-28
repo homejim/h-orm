@@ -7,6 +7,7 @@ import com.homejim.framework.sql.SqlTypeEnum;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public class UpdateSqlGenerator implements SqlGenerator {
 
-    private static Joiner sqlJoiner = Joiner.on(",");
+    private static Joiner sqlJoiner = Joiner.on("");
 
     public final static UpdateSqlGenerator INSTANCE = new UpdateSqlGenerator();
     /**
@@ -38,7 +39,20 @@ public class UpdateSqlGenerator implements SqlGenerator {
     }
 
     public String getUpdateCaules(SqlEntity sqlEntity) {
-        List<String> selectColumns = sqlEntity.getProperties().stream().filter(MappingProperty::getSelect).map(item -> "{? " + item.getColumn() + "=#" + item.getField() + "#}").collect(Collectors.toList());
-        return sqlJoiner.join(selectColumns);
+        List<String> noUpdateList = sqlEntity.getNotUpdateProperties().stream().map(MappingProperty::getField).collect(Collectors.toList());
+        MappingProperty primaryMappingProperty = sqlEntity.getPrimaryKey();
+        String first = String.format("{?? %s=#%s#}", primaryMappingProperty.getColumn(), primaryMappingProperty.getField());
+
+        List<String> selectColumns = sqlEntity.getProperties().stream().filter(MappingProperty::getSelect).map(
+                item -> {
+                    if (!noUpdateList.contains(item.getField())) {
+                        if (!primaryMappingProperty.getField().equals(item.getField())) {
+                            return String.format("{? ,%s=#%s#}", item.getColumn(), item.getField());
+                        }
+                    }
+                    return null;
+                }).filter(Objects::nonNull).collect(Collectors.toList());
+        String join = sqlJoiner.join(selectColumns);
+        return first + join;
     }
 }
