@@ -52,7 +52,7 @@ public class SegmentTokenHandler implements TokenHandler {
         if (paramMatcher.find()) {
             sqlSegment.setParam(paramMatcher.group(1));
             sqlSegment.setPutParam(false);
-            sqlSegment.setParsedSql(sqlSegment.getParsedSql().replace("#" + sqlSegment.getParam() + "#", ""));
+            sqlSegment.setParsedSql(sqlSegment.getParsedSql().replace("@" + sqlSegment.getParam() + "@", ""));
         }
     }
 }

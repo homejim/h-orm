@@ -1,5 +1,6 @@
 package com.homejim.framework.session;
 
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
 import com.homejim.framework.context.init.Initializer;
 import com.homejim.framework.datasource.pooled.PooledDataSourceFactory;
@@ -53,12 +54,20 @@ public class HDaoTest {
         String s2 = JSON.toJSONString(user2);
         System.out.println(s2);
         user.setName("lalala");
-        hDao.updateById(user, "123");
+        hDao.updateById(user);
     }
 
     @Test
     public void testDelete() {
         hDao.deleteById(User.class, "666");
+    }
+
+    @Test
+    public void testInsert() {
+        User user = new User();
+        user.setId(IdUtil.simpleUUID());
+        user.setName("hebiwen");
+        hDao.insert(user);
     }
 
     @Test

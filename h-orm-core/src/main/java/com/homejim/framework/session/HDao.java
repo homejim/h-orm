@@ -51,12 +51,30 @@ public class HDao {
         return queryEntity(tClass, mappedStatement, params);
     }
 
-    public <T> Boolean updateById(T entity, Object id) {
-        if (StringUtils.isEmpty(id)) {
-            throw new IllegalArgumentException("Id is required!");
-        }
+    public <T> Boolean updateById(T entity) {
         String updateSqlKey = SqlPool.sqlKey(entity.getClass().getName(), "mysql", SqlTypeEnum.UPDATE);
         MappedStatement mappedStatement = SqlPool.getSql(updateSqlKey);
+        Map<String, Object> params = new HashMap<>();
+        SqlEntity sqlEntity = mappedStatement.getSqlEntity();
+        List<MappingProperty> mappingProperties = sqlEntity.getProperties();
+        Reflector reflector = DefaultReflectorFactory.INSTANCE.findForClass(entity.getClass());
+        for (MappingProperty mappingProperty : mappingProperties) {
+            Invoker getInvoker = reflector.getGetInvoker(mappingProperty.getField());
+            Object[] objects = new Object[0];
+            try {
+                params.put(mappingProperty.getField(), getInvoker.invoke(entity, objects));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        return execute(entity.getClass(), mappedStatement, params);
+    }
+
+    public <T> Boolean insert(T entity) {
+        String insertSqlKey = SqlPool.sqlKey(entity.getClass().getName(), "mysql", SqlTypeEnum.INSERT);
+        MappedStatement mappedStatement = SqlPool.getSql(insertSqlKey);
         Map<String, Object> params = new HashMap<>();
         SqlEntity sqlEntity = mappedStatement.getSqlEntity();
         List<MappingProperty> mappingProperties = sqlEntity.getProperties();

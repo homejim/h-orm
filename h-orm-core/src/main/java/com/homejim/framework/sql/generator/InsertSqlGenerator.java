@@ -29,7 +29,7 @@ public class InsertSqlGenerator implements SqlGenerator {
 
     @Override
     public SqlTypeEnum getSqlType() {
-        return SqlTypeEnum.UPDATE;
+        return SqlTypeEnum.INSERT;
     }
 
     public String getInsertCaules(SqlEntity sqlEntity) {
@@ -43,12 +43,12 @@ public class InsertSqlGenerator implements SqlGenerator {
         for (MappingProperty item : properties) {
             if (!noInsertList.contains(item.getField())) {
                 if (!first) {
-                    columns.append("{?,").append(item.getColumn()).append("@").append(item.getField()).append("@}");
-                    columns.append("{?,").append(item.getColumn()).append("#").append(item.getField()).append("#}");
-                } else {
-                    columns.append(item.getColumn());
-                    values.append("?");
+                    columns.append("{? ").append(item.getColumn()).append("@").append(item.getField()).append("@}");
+                    values.append("{? ").append("#").append(item.getField()).append("#}");
                     first = true;
+                } else {
+                    columns.append("{?,").append(item.getColumn()).append("@").append(item.getField()).append("@}");
+                    values.append("{?,").append("#").append(item.getField()).append("#}");
                 }
             }
         }
