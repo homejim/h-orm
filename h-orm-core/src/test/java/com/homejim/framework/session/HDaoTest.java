@@ -44,7 +44,7 @@ public class HDaoTest {
         properties.put("driver", "com.mysql.jdbc.Driver");
         properties.put("url", "jdbc:mysql://localhost:3306/horm_sample");
         properties.put("username", "root");
-        properties.put("password", "123456");
+        properties.put("password", "");
         unpooledDataSourceFactory.setProperties(properties);
 
         hDao.setDataSourceFactory(unpooledDataSourceFactory);

@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 更新sql 的生成器
+ * 更新实体的 sql 生成器
  *
  * @author homejim
  * @since 2019-12-25
