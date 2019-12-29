@@ -72,7 +72,20 @@ public class HDao {
                 e.printStackTrace();
             }
         }
-        return execute(entity.getClass(), mappedStatement,params);
+        return execute(entity.getClass(), mappedStatement, params);
+    }
+
+    public <T> Boolean deleteById(Class<T> tClass, Object id) {
+        if (StringUtils.isEmpty(id)) {
+            throw new IllegalArgumentException("Id is required!");
+        }
+        String selectSqlKey = SqlPool.sqlKey(tClass.getName(), "mysql", SqlTypeEnum.DELETE);
+        MappedStatement mappedStatement = SqlPool.getSql(selectSqlKey);
+        Map<String, Object> params = new HashMap<>();
+        SqlEntity sqlEntity = mappedStatement.getSqlEntity();
+        MappingProperty primaryKey = sqlEntity.getPrimaryKey();
+        params.put(primaryKey.getField(), id);
+        return execute(tClass, mappedStatement, params);
     }
 
     public <T> Boolean execute(Class<T> tClass, MappedStatement mappedStatement, Map<String, Object> params) {
@@ -118,6 +131,7 @@ public class HDao {
         return false;
 
     }
+
     public <T> T queryEntity(Class<T> tClass, MappedStatement mappedStatement, Map<String, Object> params) {
         StatementContext statementContext = new StatementContext();
         List<SqlSegment> segments = mappedStatement.getSegments();

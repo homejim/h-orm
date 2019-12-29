@@ -15,7 +15,7 @@ public class DeleteSqlGenerator implements SqlGenerator {
 
     public final static DeleteSqlGenerator INSTANCE = new DeleteSqlGenerator();
 
-    private final String DELETE_TEMPLATE = "delete %s where %s ";
+    private final String DELETE_TEMPLATE = "delete from %s where %s ";
 
     @Override
     public String generate(SqlEntity sqlEntity) {

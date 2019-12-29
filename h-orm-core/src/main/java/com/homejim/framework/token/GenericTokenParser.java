@@ -84,7 +84,10 @@ public class GenericTokenParser {
             start = text.indexOf(openToken, offset);
         }
         if (offset < src.length) {
-            sqlSegments.add(newCommonSqlSegment(new String(src, offset, src.length - offset)));
+            SqlSegment sqlSegment = newCommonSqlSegment(new String(src, offset, src.length - offset));
+            if (sqlSegment != null) {
+                sqlSegments.add(sqlSegment);
+            }
         }
         return sqlSegments;
     }

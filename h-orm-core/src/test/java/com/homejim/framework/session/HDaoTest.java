@@ -8,11 +8,9 @@ import com.homejim.framework.entity.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Properties;
@@ -26,19 +24,14 @@ import java.util.Properties;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class HDaoTest {
-    @Autowired
-    private ConfigurableEnvironment environment;
+
+    private HDao hDao = new HDao();
 
     @Before
     public void init() {
         SpringApplication application = new SpringApplication(HDaoTest.class);
         application.addInitializers(new Initializer());
         application.run("");
-    }
-
-    @Test
-    public void test() {
-        HDao hDao = new HDao();
         UnpooledDataSourceFactory unpooledDataSourceFactory = new UnpooledDataSourceFactory();
         Properties properties = new Properties();
         properties.put("driver", "com.mysql.jdbc.Driver");
@@ -48,6 +41,11 @@ public class HDaoTest {
         unpooledDataSourceFactory.setProperties(properties);
 
         hDao.setDataSourceFactory(unpooledDataSourceFactory);
+    }
+
+    @Test
+    public void test() {
+
         User user = hDao.selectById(User.class, "123");
         String s = JSON.toJSONString(user);
         System.out.println(s);
@@ -56,6 +54,11 @@ public class HDaoTest {
         System.out.println(s2);
         user.setName("lalala");
         hDao.updateById(user, "123");
+    }
+
+    @Test
+    public void testDelete() {
+        hDao.deleteById(User.class, "666");
     }
 
     @Test
