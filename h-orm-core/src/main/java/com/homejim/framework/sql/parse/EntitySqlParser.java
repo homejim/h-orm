@@ -9,6 +9,7 @@ import com.homejim.framework.sql.MappingProperty;
 import com.homejim.framework.sql.SqlEntity;
 import com.homejim.framework.sql.SqlPool;
 import com.homejim.framework.sql.generator.DeleteSqlGenerator;
+import com.homejim.framework.sql.generator.InsertSqlGenerator;
 import com.homejim.framework.sql.generator.SelectSqlGenerator;
 import com.homejim.framework.sql.generator.SqlGenerator;
 import com.homejim.framework.sql.generator.UpdateSqlGenerator;
@@ -35,6 +36,7 @@ public class EntitySqlParser implements SqlParser {
     private List<SqlGenerator> generators = Arrays.asList(
             SelectSqlGenerator.INSTANCE,
             DeleteSqlGenerator.INSTANCE,
+            InsertSqlGenerator.INSTANCE,
             UpdateSqlGenerator.INSTANCE);
     /**
      * sql 符号解析器

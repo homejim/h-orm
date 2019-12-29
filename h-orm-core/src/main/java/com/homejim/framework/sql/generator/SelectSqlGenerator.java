@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Sql 生成器
  *
- * @author hejiajin hejiajin@3vjia.com
+ * @author homejim
  * @since 2019-12-06 23:05
  */
 public class SelectSqlGenerator implements SqlGenerator {

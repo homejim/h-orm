@@ -12,7 +12,9 @@ import java.util.regex.Pattern;
  */
 public class SegmentTokenHandler implements TokenHandler {
 
-    Pattern PARAM_PATTERN = Pattern.compile("#([a-zA-Z0-9_]+)#");
+    private Pattern PARAM_PATTERN = Pattern.compile("#([a-zA-Z0-9_]+)#");
+
+    private Pattern FLAG_PATTERN = Pattern.compile("@([a-zA-Z0-9_]+)@");
 
     @Override
     public SqlSegment handleToken(String content) {
@@ -21,6 +23,7 @@ public class SegmentTokenHandler implements TokenHandler {
         sqlSegment.setSegment(content);
         segmentPattern(sqlSegment);
         findParam(sqlSegment);
+        findNotPutParam(sqlSegment);
         return sqlSegment;
     }
 
@@ -39,7 +42,17 @@ public class SegmentTokenHandler implements TokenHandler {
         Matcher paramMatcher = PARAM_PATTERN.matcher(sqlSegment.getParsedSql());
         if (paramMatcher.find()) {
             sqlSegment.setParam(paramMatcher.group(1));
+            sqlSegment.setPutParam(true);
             sqlSegment.setParsedSql(sqlSegment.getParsedSql().replace("#" + sqlSegment.getParam() + "#", "?"));
+        }
+    }
+
+    private void findNotPutParam(SqlSegment sqlSegment) {
+        Matcher paramMatcher = FLAG_PATTERN.matcher(sqlSegment.getParsedSql());
+        if (paramMatcher.find()) {
+            sqlSegment.setParam(paramMatcher.group(1));
+            sqlSegment.setPutParam(false);
+            sqlSegment.setParsedSql(sqlSegment.getParsedSql().replace("#" + sqlSegment.getParam() + "#", ""));
         }
     }
 }

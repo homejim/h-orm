@@ -32,4 +32,8 @@ public class SqlSegment {
      */
     private String param;
 
+    /**
+     * 是否加入参数
+     */
+    private boolean putParam;
 }

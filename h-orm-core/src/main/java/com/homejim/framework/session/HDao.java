@@ -98,7 +98,9 @@ public class HDao {
                 Object param = params.get(segment.getParam());
                 if (param != null) {
                     sql.append(" ").append(segment.getParsedSql());
-                    finalParams.add(param);
+                    if (segment.isPutParam()) {
+                        finalParams.add(param);
+                    }
                 }
             } else {
                 sql.append(" ").append(segment.getParsedSql());
@@ -142,7 +144,9 @@ public class HDao {
                 Object param = params.get(segment.getParam());
                 if (param != null) {
                     sql.append(" ").append(segment.getParsedSql());
-                    finalParams.add(param);
+                    if (segment.isPutParam()) {
+                        finalParams.add(param);
+                    }
                 }
             } else {
                 sql.append(" ").append(segment.getParsedSql());
