@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Statement;
 import java.util.List;
 
 /**
@@ -31,4 +32,6 @@ public class StatementContext {
     private String preparedSql;
 
     private Reflector reflector;
+
+    private Statement statement;
 }
