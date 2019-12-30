@@ -47,19 +47,19 @@ public class HDaoTest {
     @Test
     public void test() {
 
-        User user = hDao.selectById(User.class, "123");
+        User user = hDao.select(User.class, "123");
         String s = JSON.toJSONString(user);
         System.out.println(s);
-        User user2 = hDao.selectById(User.class, "123");
+        User user2 = hDao.select(User.class, "123");
         String s2 = JSON.toJSONString(user2);
         System.out.println(s2);
         user.setName("lalala");
-        hDao.updateById(user);
+        hDao.update(user);
     }
 
     @Test
     public void testDelete() {
-        hDao.deleteById(User.class, "666");
+        hDao.delete(User.class, "666");
     }
 
     @Test
@@ -82,10 +82,10 @@ public class HDaoTest {
         pooledDataSourceFactory.setProperties(properties);
 
         hDao.setDataSourceFactory(pooledDataSourceFactory);
-        User user = hDao.selectById(User.class, "123");
+        User user = hDao.select(User.class, "123");
         String s = JSON.toJSONString(user);
         System.out.println(s);
-        User user2 = hDao.selectById(User.class, "123");
+        User user2 = hDao.select(User.class, "123");
         String s2 = JSON.toJSONString(user2);
         System.out.println(s2);
 

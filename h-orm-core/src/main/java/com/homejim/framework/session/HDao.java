@@ -38,7 +38,7 @@ public class HDao {
     @Setter
     private DataSourceFactory dataSourceFactory;
 
-    public <T> T selectById(Class<T> tClass, Object id) {
+    public <T> T select(Class<T> tClass, Object id) {
         if (StringUtils.isEmpty(id)) {
             throw new IllegalArgumentException("Id is required!");
         }
@@ -51,29 +51,17 @@ public class HDao {
         return queryEntity(tClass, mappedStatement, params);
     }
 
-    public <T> Boolean updateById(T entity) {
+    public <T> Boolean update(T entity) {
         String updateSqlKey = SqlPool.sqlKey(entity.getClass().getName(), "mysql", SqlTypeEnum.UPDATE);
-        MappedStatement mappedStatement = SqlPool.getSql(updateSqlKey);
-        Map<String, Object> params = new HashMap<>();
-        SqlEntity sqlEntity = mappedStatement.getSqlEntity();
-        List<MappingProperty> mappingProperties = sqlEntity.getProperties();
-        Reflector reflector = DefaultReflectorFactory.INSTANCE.findForClass(entity.getClass());
-        for (MappingProperty mappingProperty : mappingProperties) {
-            Invoker getInvoker = reflector.getGetInvoker(mappingProperty.getField());
-            Object[] objects = new Object[0];
-            try {
-                params.put(mappingProperty.getField(), getInvoker.invoke(entity, objects));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-        return execute(entity.getClass(), mappedStatement, params);
+        return execute(entity, updateSqlKey);
     }
 
     public <T> Boolean insert(T entity) {
         String insertSqlKey = SqlPool.sqlKey(entity.getClass().getName(), "mysql", SqlTypeEnum.INSERT);
+        return execute(entity, insertSqlKey);
+    }
+
+    private <T> Boolean execute(T entity, String insertSqlKey) {
         MappedStatement mappedStatement = SqlPool.getSql(insertSqlKey);
         Map<String, Object> params = new HashMap<>();
         SqlEntity sqlEntity = mappedStatement.getSqlEntity();
@@ -93,7 +81,7 @@ public class HDao {
         return execute(entity.getClass(), mappedStatement, params);
     }
 
-    public <T> Boolean deleteById(Class<T> tClass, Object id) {
+    public <T> Boolean delete(Class<T> tClass, Object id) {
         if (StringUtils.isEmpty(id)) {
             throw new IllegalArgumentException("Id is required!");
         }
